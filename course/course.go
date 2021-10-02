@@ -26,17 +26,17 @@ var courses = []Course{
 }
 
 func (s *Server) GetCourses(ctx context.Context, message *GetCoursesRequest) (*Message, error) {
-	log.Printf("Receive message from client: %s", message.GetName())
-	return &Message{Body: "heres is all the courses:\n\n" + coursesToString()}, nil
+	log.Printf("Receive message from client: %s", message.GetRequest())
+	return &Message{Name: "heres is all the courses:\n\n" + coursesToString()}, nil
 }
 
 func (s *Server) GetCourseById(ctx context.Context, message *GetCourseByIdRequest) (*Message, error) {
-	return &Message{Body: "\n\nheres is the course with id: " + courseToString(message.GetName())}, nil
+	return &Message{Name: "\n\nheres is the course with id: " + courseToString(message.GetRequest())}, nil
 }
 
 func (s *Server) DeleteCourseById(ctx context.Context, message *DeleteCourseByIdRequest) (*Message, error) {
-	deletionComplete := deleteCourseByID(message.GetName())
-	return &Message{Body: deletionComplete}, nil
+	deletionComplete := deleteCourseByID(message.GetRequest())
+	return &Message{Name: deletionComplete}, nil
 }
 
 // func (s *server) PutCourseById(ctx context.Context, in *pb.PutCourseByIdRequest) (*pb.PutCourseByIdReply, error) {

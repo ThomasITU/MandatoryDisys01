@@ -23,11 +23,7 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-
 	c := co.NewCourseServiceClient(conn)
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
 
 	// Contact the server and print out its response.
 	request := defaultName
@@ -35,21 +31,24 @@ func main() {
 		request = os.Args[1]
 	}
 
-	allCourses, err := c.GetCourses(ctx, &GetCoursesRequest{})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", allCourses.GetMessage())
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
 
-	getCourse, err := c.GetCourseById(ctx, &GetCourseByIdRequest{Body: request})
+	allCourses, err := c.GetCourses(ctx, &co.GetCoursesRequest{})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", getCourse.GetMessage())
+	log.Printf("%s", allCourses.GetName())
 
-	deleteCourse, err := c.DeleteCourseById(ctx, &DeleteCourseByIdRequest{Body: request})
+	getCourse, err := c.GetCourseById(ctx, &co.GetCourseByIdRequest{Request: request})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", deleteCourse.GetMessage())
+	log.Printf("%s", getCourse.GetName())
+
+	deleteCourse, err := c.DeleteCourseById(ctx, &co.DeleteCourseByIdRequest{Request: request})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("%s", deleteCourse.GetName())
 }
