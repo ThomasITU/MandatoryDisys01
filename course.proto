@@ -1,0 +1,48 @@
+syntax = "proto3";
+package course;
+option go_package = "github.com/example/path/gen;gen";
+
+
+service CourseService{
+
+    rpc GetCourses (GetCoursesRequest) returns (Message) {}
+
+    rpc GetCourseById (GetCourseByIdRequest) returns (Message) {}
+
+    rpc DeleteCourseById (DeleteCourseByIdRequest) returns(Message) {}
+}
+message Message{
+    string body = 1;
+}
+
+message PostCourseRequest{
+    string name = 1;
+  }
+  
+  message DeleteCourseByIdRequest{
+    string name = 1;
+  }
+  
+  message GetCoursesRequest {
+    string name = 1;
+  }
+  
+  message GetCourseByIdRequest {
+    string name = 1;
+  }
+  
+ 
+  
+
+//   message GetCoursesReply {
+//     string message = 1;
+//   }
+//   message PostCourseReply{
+//     string message = 1;
+//   }
+//   message DeleteCourseByIdReply{
+//     string message = 1;
+//   }
+//   message GetCourseByIdReply {
+//     string message = 1;
+//   }
