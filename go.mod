@@ -1,4 +1,4 @@
-module v1
+module github.com/ThomasITU/MandatoryDisys01
 
 go 1.17
 

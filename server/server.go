@@ -4,15 +4,16 @@ import (
 	"log"
 	"net"
 
+	co "github.com/ThomasITU/MandatoryDisys01/course"
 	"google.golang.org/grpc"
-	"../mandatory exercise 1/mandatoryExercise/course"
 )
 
 const (
 	port = ":50051"
 )
 
-type server struct {
+type Server struct {
+	co.UnimplementedCourseServiceServer
 }
 
 func main() {
@@ -20,12 +21,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := course.Server{}
 
 	grpcServer := grpc.NewServer()
 
-	course.RegisterChatServiceServer(grpcServer, &s)
-	if err := grpcServer.Server(lis); err != nil {
+	co.RegisterCourseServiceServer(grpcServer, &Server{})
+	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve gRPC server over port %s  %v", port, err)
 	}
 

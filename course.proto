@@ -1,6 +1,6 @@
 syntax = "proto3";
-package course;
-option go_package = "github.com/example/path/gen;gen";
+package main;
+option go_package = "github.com/ThomasITU/MandatoryDisys01/course;course";
 
 
 service CourseService{

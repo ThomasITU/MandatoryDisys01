@@ -1,4 +1,4 @@
-package gen
+package course
 
 import (
 	"log"
@@ -9,7 +9,9 @@ import (
 	"context"
 )
 
-type Server struct{}
+type Server struct {
+	UnimplementedCourseServiceServer
+}
 
 type Course struct {
 	ID       string
