@@ -67,38 +67,32 @@ func (s *Server) PostCourse(ctx context.Context, message *co.PostCourseRequest) 
 }
 
 func (s *Server) PutCourse(ctx context.Context, message *co.PutCourseRequest) (*co.Message, error) {
-	return &co.Message{Name: }, nil
+	return &co.Message{Name: PutCourse(message.GetRequest())}, nil
 }
 
 // helper method
-func PostCourse(course string) string {
-	split := strings.Split(course, ",")
-	//error handling
-	if len(split) < 2 {
+func PutCourse(course string) string {
+	Id := strings.Split(course, ".")
+	putCourse := splitInputToCourse(Id[1])
+	if putCourse == nil {
 		return "bad input"
 	}
-	workload, err := strconv.Atoi(split[0])
-	rating, err := strconv.Atoi(split[1])
+	id, err := strconv.Atoi(Id[0])
 	if err != nil {
+		return "bad input: " + err.Error()
+	}
+	courses[id] = *putCourse
+
+	return "succesfully updated: " + putCourse.ID
+}
+
+func PostCourse(course string) string {
+	newCourse := splitInputToCourse(course)
+	if newCourse == nil {
 		return "bad input"
 	}
-
-	newCourse := Course{findFreeId(), int64(workload), int64(rating)}
-	courses = append(courses, newCourse)
+	courses = append(courses, *newCourse)
 	return "succesful insert of: " + newCourse.ID
-}
-
-func findFreeId() string {
-	for index, course := range courses {
-		if strconv.Itoa(index) != course.ID {
-			return strconv.Itoa(index)
-		}
-	}
-	return strconv.Itoa(len(courses))
-}
-
-func PutCourse(course string) {
-	//course := Course
 }
 
 func deleteCourseByID(id string) string {
@@ -130,6 +124,31 @@ func coursesToString() string {
 		sb.WriteString(" and is rated: " + strconv.FormatInt(course.Rating, 10) + "\n")
 	}
 	return sb.String()
+}
+
+func splitInputToCourse(course string) *Course {
+	split := strings.Split(course, ",")
+	//error handling
+	if len(split) < 2 {
+		return nil
+	}
+	workload, er := strconv.Atoi(split[0])
+	rating, err := strconv.Atoi(split[1])
+	if err != nil || er != nil {
+		return nil
+	}
+
+	newCourse := Course{findFreeId(), int64(workload), int64(rating)}
+	return &newCourse
+}
+
+func findFreeId() string {
+	for index, course := range courses {
+		if strconv.Itoa(index) != course.ID {
+			return strconv.Itoa(index)
+		}
+	}
+	return strconv.Itoa(len(courses))
 }
 
 // copy pasta fra Lotte's git
