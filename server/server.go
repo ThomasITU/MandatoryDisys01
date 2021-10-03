@@ -49,11 +49,12 @@ func main() {
 
 func (s *Server) GetCourses(ctx context.Context, message *co.GetCoursesRequest) (*co.Message, error) {
 	log.Printf("Receive message from client: %s", message.GetRequest())
-	return &co.Message{Name: "heres is all the courses:\n\n" + coursesToString()}, nil
+	return &co.Message{Name: "Here is all the courses:\n\n" + coursesToString()}, nil
 }
 
 func (s *Server) GetCourseById(ctx context.Context, message *co.GetCourseByIdRequest) (*co.Message, error) {
-	return &co.Message{Name: "\n\nheres is the course with id: " + courseToString(message.GetRequest())}, nil
+	courseAsString := courseToString(message.GetRequest())
+	return &co.Message{Name: "\n\nheres is the course with id: " + courseAsString}, nil
 }
 
 func (s *Server) DeleteCourseById(ctx context.Context, message *co.DeleteCourseByIdRequest) (*co.Message, error) {
@@ -61,7 +62,44 @@ func (s *Server) DeleteCourseById(ctx context.Context, message *co.DeleteCourseB
 	return &co.Message{Name: deletionComplete}, nil
 }
 
+func (s *Server) PostCourse(ctx context.Context, message *co.PostCourseRequest) (*co.Message, error) {
+	return &co.Message{Name: PostCourse(message.GetRequest())}, nil
+}
+
+func (s *Server) PutCourse(ctx context.Context, message *co.PutCourseRequest) (*co.Message, error) {
+	return &co.Message{Name: }, nil
+}
+
 // helper method
+func PostCourse(course string) string {
+	split := strings.Split(course, ",")
+	//error handling
+	if len(split) < 2 {
+		return "bad input"
+	}
+	workload, err := strconv.Atoi(split[0])
+	rating, err := strconv.Atoi(split[1])
+	if err != nil {
+		return "bad input"
+	}
+
+	newCourse := Course{findFreeId(), int64(workload), int64(rating)}
+	courses = append(courses, newCourse)
+	return "succesful insert of: " + newCourse.ID
+}
+
+func findFreeId() string {
+	for index, course := range courses {
+		if strconv.Itoa(index) != course.ID {
+			return strconv.Itoa(index)
+		}
+	}
+	return strconv.Itoa(len(courses))
+}
+
+func PutCourse(course string) {
+	//course := Course
+}
 
 func deleteCourseByID(id string) string {
 	deletionState := "Deletion failed couldn't find and delete: " + id

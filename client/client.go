@@ -36,19 +36,25 @@ func main() {
 
 	allCourses, err := c.GetCourses(ctx, &co.GetCoursesRequest{})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not get all courses: %v", err)
 	}
 	log.Printf("%s", allCourses.GetName())
 
 	getCourse, err := c.GetCourseById(ctx, &co.GetCourseByIdRequest{Request: request})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not getCourse: %v", err)
 	}
 	log.Printf("%s", getCourse.GetName())
 
 	deleteCourse, err := c.DeleteCourseById(ctx, &co.DeleteCourseByIdRequest{Request: request})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not delete: %v", err)
 	}
 	log.Printf("%s", deleteCourse.GetName())
+
+	postCourse, err := c.PostCourse(ctx, &co.PostCourseRequest{Request: request})
+	if err != nil {
+		log.Fatalf("could not post course")
+	}
+	log.Printf("%s", postCourse.GetName())
 }

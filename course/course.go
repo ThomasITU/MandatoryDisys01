@@ -39,17 +39,6 @@ func (s *Server) DeleteCourseById(ctx context.Context, message *DeleteCourseById
 	return &Message{Name: deletionComplete}, nil
 }
 
-// func (s *server) PutCourseById(ctx context.Context, in *pb.PutCourseByIdRequest) (*pb.PutCourseByIdReply, error) {
-
-// }
-
-// func (s *server) PostCourse(ctx context.Context, in *pb.PostCourseRequest) (*pb.PostCourseReply, error) {
-
-// }
-
-// void post(Course c)
-// void put(course c)
-
 // helper method
 
 func deleteCourseByID(id string) string {

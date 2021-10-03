@@ -10,9 +10,18 @@ service CourseService{
     rpc GetCourseById (GetCourseByIdRequest) returns (Message) {}
 
     rpc DeleteCourseById (DeleteCourseByIdRequest) returns(Message) {}
+
+  
+    rpc PutCourse (PutCourseRequest) returns(Message) {}
+
+    rpc PostCourse (PostCourseRequest) returns(Message) {}
 }
 message Message{
     string name = 1;
+}
+
+message PutCourseRequest{
+  string request = 1; 
 }
 
 message PostCourseRequest{
