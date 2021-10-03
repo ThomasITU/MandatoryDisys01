@@ -40,21 +40,29 @@ func main() {
 	}
 	log.Printf("%s", allCourses.GetName())
 
-	getCourse, err := c.GetCourseById(ctx, &co.GetCourseByIdRequest{Request: request})
-	if err != nil {
-		log.Fatalf("could not getCourse: %v", err)
-	}
-	log.Printf("%s", getCourse.GetName())
+	// getCourse, err := c.GetCourseById(ctx, &co.GetCourseByIdRequest{Request: request})
+	// if err != nil {
+	// 	log.Fatalf("could not getCourse: %s", request)
+	// }
+	// log.Printf("%s", getCourse.GetName())
 
-	deleteCourse, err := c.DeleteCourseById(ctx, &co.DeleteCourseByIdRequest{Request: request})
-	if err != nil {
-		log.Fatalf("could not delete: %v", err)
-	}
-	log.Printf("%s", deleteCourse.GetName())
+	// deleteCourse, err := c.DeleteCourseById(ctx, &co.DeleteCourseByIdRequest{Request: request})
+	// if err != nil {
+	// 	log.Fatalf("could not delete: %s", request)
+	// }
+	// log.Printf("%s", deleteCourse.GetName())
 
-	postCourse, err := c.PostCourse(ctx, &co.PostCourseRequest{Request: request})
+	// postCourse, err := c.PostCourse(ctx, &co.PostCourseRequest{Request: request})
+	// if err != nil {
+	// 	log.Fatalf("could not post course %s", request)
+	// }
+	// log.Printf("%s", postCourse.GetName())
+
+	putCourse, err := c.PutCourse(ctx, &co.PutCourseRequest{Request: request})
 	if err != nil {
-		log.Fatalf("could not post course")
+		log.Fatalf("could not update course: %s", request)
 	}
-	log.Printf("%s", postCourse.GetName())
+	log.Printf("%s", putCourse.GetName())
+
+	
 }

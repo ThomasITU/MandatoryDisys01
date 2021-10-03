@@ -71,7 +71,11 @@ func (s *Server) PutCourse(ctx context.Context, message *co.PutCourseRequest) (*
 }
 
 // helper method
+
 func PutCourse(course string) string {
+	if len(course) < 4 || !strings.Contains(course, ".") {
+		return "bad input"
+	}
 	Id := strings.Split(course, ".")
 	putCourse := splitInputToCourse(Id[1])
 	if putCourse == nil {
@@ -81,6 +85,7 @@ func PutCourse(course string) string {
 	if err != nil {
 		return "bad input: " + err.Error()
 	}
+	putCourse.ID = Id[0]
 	courses[id] = *putCourse
 
 	return "succesfully updated: " + putCourse.ID
@@ -127,8 +132,10 @@ func coursesToString() string {
 }
 
 func splitInputToCourse(course string) *Course {
+	if len(course) < 3 || !strings.Contains(course, ",") {
+		return nil
+	}
 	split := strings.Split(course, ",")
-	//error handling
 	if len(split) < 2 {
 		return nil
 	}
