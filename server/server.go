@@ -70,22 +70,27 @@ func (s *Server) PutCourse(ctx context.Context, message *co.PutCourseRequest) (*
 	return &co.Message{Name: PutCourse(message.GetRequest())}, nil
 }
 
-// helper method
-
+// helper methods
 func PutCourse(course string) string {
 	if len(course) < 4 || !strings.Contains(course, ".") {
 		return "bad input"
 	}
-	Id := strings.Split(course, ".")
-	putCourse := splitInputToCourse(Id[1])
+	putId := strings.Split(course, ".")
+	putCourse := splitInputToCourse(putId[1])
 	if putCourse == nil {
 		return "bad input"
 	}
-	id, err := strconv.Atoi(Id[0])
+	id, err := strconv.Atoi(putId[0])
 	if err != nil {
 		return "bad input: " + err.Error()
 	}
-	putCourse.ID = Id[0]
+
+	// ensure order before updating directly on slice
+	sort.Slice(courses, func(i, j int) bool {
+		return courses[i].ID < courses[j].ID
+	})
+
+	putCourse.ID = putId[0]
 	courses[id] = *putCourse
 
 	return "succesfully updated: " + putCourse.ID
@@ -109,26 +114,6 @@ func deleteCourseByID(id string) string {
 		}
 	}
 	return deletionState
-}
-
-func courseToString(id string) string {
-	courseString := "course not found"
-	for _, course := range courses {
-		if course.ID == id {
-			courseString = course.ID + " the course workload is: " + strconv.FormatInt(course.Workload, 10) + " and is rated: " + strconv.FormatInt(course.Rating, 10)
-		}
-	}
-	return courseString
-}
-
-func coursesToString() string {
-	var sb strings.Builder
-	for _, course := range courses {
-		sb.WriteString("courseid: " + course.ID + " has a workload of: ")
-		sb.WriteString(strconv.FormatInt(course.Workload, 10))
-		sb.WriteString(" and is rated: " + strconv.FormatInt(course.Rating, 10) + "\n")
-	}
-	return sb.String()
 }
 
 func splitInputToCourse(course string) *Course {
@@ -161,21 +146,36 @@ func findFreeId() string {
 // copy pasta fra Lotte's git
 func delCourse(id string) {
 	oldCourses := courses
-	courses = courses[0:0]
+	courses = nil
 
 	for _, a := range oldCourses {
-		ID := a.ID
-		if ID == id {
-			for _, c := range oldCourses {
-				if c.ID != a.ID {
-					courses = append(courses, c)
-				}
-			}
+		if id != a.ID {
+			courses = append(courses, a)
 		}
 	}
 
 	sort.Slice(courses, func(i, j int) bool {
 		return courses[i].ID < courses[j].ID
 	})
+}
 
+// print methods
+func courseToString(id string) string {
+	courseString := "course not found"
+	for _, course := range courses {
+		if course.ID == id {
+			courseString = course.ID + " the course workload is: " + strconv.FormatInt(course.Workload, 10) + " and is rated: " + strconv.FormatInt(course.Rating, 10)
+		}
+	}
+	return courseString
+}
+
+func coursesToString() string {
+	var sb strings.Builder
+	for _, course := range courses {
+		sb.WriteString("courseid: " + course.ID + " has a workload of: ")
+		sb.WriteString(strconv.FormatInt(course.Workload, 10))
+		sb.WriteString(" and is rated: " + strconv.FormatInt(course.Rating, 10) + "\n")
+	}
+	return sb.String()
 }

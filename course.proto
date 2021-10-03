@@ -2,7 +2,7 @@ syntax = "proto3";
 package main;
 option go_package = "github.com/ThomasITU/MandatoryDisys01/course;course";
 
-
+//defince endpoints - what is exposed to clients aka interface?
 service CourseService{
 
     rpc GetCourses (GetCoursesRequest) returns (Message) {}
@@ -10,12 +10,12 @@ service CourseService{
     rpc GetCourseById (GetCourseByIdRequest) returns (Message) {}
 
     rpc DeleteCourseById (DeleteCourseByIdRequest) returns(Message) {}
-
   
     rpc PutCourse (PutCourseRequest) returns(Message) {}
 
     rpc PostCourse (PostCourseRequest) returns(Message) {}
 }
+
 message Message{
     string name = 1;
 }

@@ -4,10 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	co "github.com/ThomasITU/MandatoryDisys01/course"
 	"google.golang.org/grpc"
 )
+
+var options = []string{"allCourses takes no parameters", "getCourse takes an id: \"1\"", "put takes the id of a course,workload and rating: \"1.30,50\"",
+	"postCourse takes workload and rating: \"30,50\"", "delCourse takes an id: \"1\""}
 
 const (
 	address        = "localhost:50051"
@@ -27,6 +31,7 @@ func main() {
 	// Contact the server and print out its response.
 	request := defaultRequest
 
+	log.Println(optionsToString() + "\n")
 	for {
 		fmt.Scanln(&request)
 		ctx := context.Background()
@@ -36,15 +41,22 @@ func main() {
 	}
 }
 
+//CLI logic
 func evalRequest(request string, ctx context.Context, c co.CourseServiceClient) {
+	if request == "options" {
+		log.Println(optionsToString() + "\n")
+		return
+	} else if request == "allCourses" {
+		allCourses(ctx, c)
+		return
+	}
+
 	var parameters string
 	fmt.Scanln(&parameters)
 
 	switch request {
-	case "put":
-		put(parameters, ctx, c)
-	case "allCourses":
-		allCourses(ctx, c)
+	case "putCourse":
+		putCourse(parameters, ctx, c)
 	case "getCourse":
 		getCourse(parameters, ctx, c)
 	case "deleteCourse":
@@ -61,7 +73,7 @@ func allCourses(ctx context.Context, c co.CourseServiceClient) {
 	if err != nil {
 		log.Fatalf("could not get all courses: %v", err)
 	}
-	log.Printf("%s", allCourses.GetName())
+	log.Printf("%s\n", allCourses.GetName())
 }
 
 func getCourse(params string, ctx context.Context, c co.CourseServiceClient) {
@@ -88,10 +100,19 @@ func postCourse(params string, ctx context.Context, c co.CourseServiceClient) {
 	log.Printf("%s", postCourse.GetName())
 }
 
-func put(params string, ctx context.Context, c co.CourseServiceClient) {
+func putCourse(params string, ctx context.Context, c co.CourseServiceClient) {
 	putCourse, err := c.PutCourse(ctx, &co.PutCourseRequest{Request: params})
 	if err != nil {
 		log.Fatalf("could not update course: %s", params)
 	}
 	log.Printf("%s", putCourse.GetName())
+}
+
+// helper method
+func optionsToString() string {
+	var sb strings.Builder
+	for _, option := range options {
+		sb.WriteString("\n" + option)
+	}
+	return sb.String()
 }
